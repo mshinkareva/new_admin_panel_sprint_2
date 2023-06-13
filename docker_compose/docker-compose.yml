@@ -1,0 +1,52 @@
+# docker-compose.yml
+
+version: '3'
+services:
+  django:
+    container_name: django
+    build: ./app
+    volumes:
+      - static_volume:/opt/app/static/
+    expose:
+      - "8000"
+    environment:
+      - SECRET_KEY=django-insecure-^&@683rul46c@*8_r0*n5_(4gah^dm)hq^z^+r-h912wwd5%sy
+      - ALLOWED_HOSTS=127.0.0.1 localhost
+      - DEBUG=True
+      - POSTGRES_USER=app
+      - DB_NAME=movies_database
+      - POSTGRES_PASSWORD=123qwe
+      - DB_HOST=postgres
+      - DB_PORT=5432
+
+  postgres:
+    container_name: postgres
+    image: postgres:13-alpine
+    volumes:
+      - $HOME/postgresql/data:/var/lib/postgresql/data
+    environment:
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=movies_database
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=123qwe
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    ports:
+      - "5432:5432"
+  nginx:
+    container_name: nginx
+    image: nginx:1.19.2
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/conf.d:/etc/nginx/conf.d:ro
+      - ./data:/data/:ro
+      - static_volume:/opt/app/static/
+      - media_volume:/opt/app/media/
+    depends_on:
+      - django
+    ports:
+      - "80:80"
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
