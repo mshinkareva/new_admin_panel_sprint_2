@@ -65,6 +65,18 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
         _('file'), blank=True, null=True, upload_to='movies/', default=None
     )
 
+    def serialize(self):
+        return {
+            "created_at": self.created_at,
+            "update_at": self.updated_at,
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "creation_date": self.creation_date,
+            "rating": self.rating,
+            "type": self.type,
+        }
+
     class Meta:
         db_table = "content\".\"film_work"
         verbose_name = _('film work')

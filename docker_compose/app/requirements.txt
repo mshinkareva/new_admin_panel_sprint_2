@@ -21,3 +21,4 @@ typing_extensions==4.6.3
 uWSGI==2.0.21
 django-extensions==3.2.3
 requests==2.31.0
+gunicorn

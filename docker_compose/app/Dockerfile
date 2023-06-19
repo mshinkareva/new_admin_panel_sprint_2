@@ -11,8 +11,7 @@ ENV DJANGO_SETTINGS_MODULE 'config.settings'
 
 COPY requirements.txt requirements.txt
 
-
-RUN apt update && apt install -y netcat
+RUN apt update && apt install -y netcat-traditional
 
 RUN  mkdir -p /var/www/static/ \
      && mkdir -p /var/www/media/ \
@@ -23,4 +22,8 @@ RUN  mkdir -p /var/www/static/ \
 
 COPY . .
 
-CMD ["uwsgi", "--http", ":8000", "--chdir", "/opt/app", "--module", "config.wsgi:application"]
+COPY ./entrypoint.sh /root/entrypoint.sh
+
+RUN chmod +x /root/entrypoint.sh
+
+ENTRYPOINT ["/root/entrypoint.sh"]

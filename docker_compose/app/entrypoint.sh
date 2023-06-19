@@ -10,11 +10,8 @@ echo "PostgreSQL started "
 python manage.py collectstatic --no-input
 python manage.py migrate --no-input
 
-DJANGO_SUPERUSER_USERNAME=mariya.shinkareva \
-	DJANGO_SUPERUSER_PASSWORD=12345678 \
-	DJANGO_SUPERUSER_EMAIL=ms.shinkareva@yandex.ru \
-	python manage.py createsuperuser --noinput --name=mariya.shinkareva || true
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('mariya.shinkareva', 'ms.shinkareva@yandex.ru', '12345678') if not User.objects.filter(username='mariya.shinkareva').exists() else 0" | python manage.py shell
 
-gunicorn profiles.wsgi:application --bind 0.0.0.0:8000 --reload
+uwsgi --http :8000 --chdir /opt/app --module config.wsgi:application
 
 exec "$@"

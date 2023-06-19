@@ -14,13 +14,9 @@ include(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
-# DEBUG = True
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split()
-INTERNAL_IPS = [
-    '127.0.0.1', 'localhost', '172.17.0.1', '172.17.0.2', '172.17.0.3',
-]
+
+INTERNAL_IPS = os.environ.get('INTERNAL_IPS').split()
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -35,9 +31,6 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 
-# if DEBUG:
-#     INSTALLED_APPS += ['debug_toolbar']
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -48,8 +41,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# if DEBUG:
-#     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 ROOT_URLCONF = "config.urls"
 
@@ -136,8 +127,9 @@ if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
     import socket  # only if you haven't already imported this
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1",]
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", ]
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
     }
