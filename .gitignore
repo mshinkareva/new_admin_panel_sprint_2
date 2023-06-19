@@ -1,0 +1,5 @@
+/docker_compose/app/config/.env
+.idea/
+# Translations
+*.mo
+*.pot
